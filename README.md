@@ -110,13 +110,3 @@ The performance of the summarization model was assessed using:
 
 ---
 
-## 🔧 Installation and Usage
-### Prerequisites
-- Python 3.8+
-- Libraries listed in `requirements.txt`
-
-### Steps:
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/<your-github-username>/reddit-thread-summarizer.git
-   cd reddit-thread-summarizer
