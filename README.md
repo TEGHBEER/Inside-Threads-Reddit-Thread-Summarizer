@@ -1,74 +1,81 @@
 # Inside Threads: Reddit Thread Summarizer
 
 ## 📜 Project Overview
-**Inside Threads** is a comprehensive NLP project designed to summarize lengthy Reddit threads, identify trending topics, perform sentiment analysis, and generate hashtags. It addresses the challenges posed by unstructured, verbose content by transforming it into concise, meaningful summaries that enhance user engagement and accessibility.
+**Inside Threads** is a comprehensive NLP-based project designed to transform lengthy Reddit threads into concise and actionable summaries. By utilizing cutting-edge machine learning techniques such as **BART**, **Latent Dirichlet Allocation (LDA)**, and **VADER**, this project simplifies user interactions with vast amounts of Reddit data. It provides key insights by summarizing discussions, detecting trends, and analyzing sentiment while ensuring user-friendly functionality through an intuitive **Streamlit** interface.
 
-This project integrates advanced machine learning techniques, including the **BART** transformer model, **Latent Dirichlet Allocation (LDA)** for topic modeling, and **VADER** for sentiment analysis. A user-friendly interface powered by **Streamlit** makes it easy for users to input data and access insights.
+This project was undertaken as part of a capstone initiative, demonstrating the power of **data-driven decision-making** and **natural language processing** in solving real-world challenges.
 
 ---
 
 ## 🚀 Objectives
-The primary goal is to simplify the navigation of large volumes of user-generated Reddit content by:
-- Summarizing long threads into concise, contextually relevant text.
-- Identifying and highlighting trending topics using LDA.
-- Conducting sentiment analysis to understand the tone of conversations.
-- Generating meaningful hashtags for better content categorization.
-- Providing a streamlined UI for non-technical users.
+- Summarize extensive Reddit threads into contextually relevant, concise summaries.
+- Detect and highlight trending topics using LDA.
+- Perform sentiment analysis to evaluate discussion tone.
+- Generate meaningful hashtags for effective content categorization.
+- Provide an interactive UI for users to access insights effortlessly.
 
 ---
 
 ## 🔍 Problem Statement
-Reddit, as a platform, generates massive amounts of data daily, with threads often exceeding thousands of comments. Key challenges include:
-- **Long Threads**: Difficulty in navigating thousands of comments.
-- **Repetitive Content**: Redundancy in discussions adds clutter.
-- **Context Loss**: Tangential comments dilute the primary discussion focus.
-- **Sentiment Understanding**: Limited tools to analyze the tone of conversations effectively.
+Reddit generates approximately **469 million posts annually**, with daily comment volumes exceeding **7.5 million**. Extracting meaningful information from this data presents challenges:
+- **Long Threads**: Thousands of comments make navigation difficult.
+- **Repetitive Content**: Similar opinions are repeated, cluttering discussions.
+- **Context Loss**: Key details are often lost as discussions veer off-topic.
+- **Sentiment Understanding**: Limited tools exist to analyze the tone of Reddit threads effectively.
 
-This project tackles these challenges by providing efficient, AI-powered summarization and analysis tools tailored to Reddit's unique structure.
+**Inside Threads** addresses these issues by employing advanced summarization techniques to distill critical insights while preserving the richness of the original conversations.
 
 ---
 
 ## 📊 Dataset and Preprocessing
 ### Dataset: TLDRHQ
-This project uses the **TLDRHQ dataset**, a robust collection designed for summarization tasks. Key features of the dataset include:
+The **TLDRHQ dataset** was chosen for its robustness in supporting text summarization tasks. Key dataset components include:
 - **Id**: Unique identifiers for posts and comments.
-- **Document**: Segmented user posts with boundary markers.
-- **Summary**: Concise, user-generated post summaries.
-- **Ext_labels**: Extractive labels highlighting critical sentences.
-- **Rg_labels**: Rouge scores for evaluating summarization quality.
+- **Document**: Segmented user posts with special tokens marking sentence boundaries.
+- **Summary**: Concise user-generated summaries (TL;DR).
+- **Extractive Labels**: Highlights critical sentences within documents.
+- **Rouge Scores**: Metrics for evaluating summarization quality.
 
-### Preprocessing Steps
-1. **Data Cleaning**: Removed URLs, usernames, and special characters using regex.
-2. **Normalization**: Converted text to lowercase and preserved punctuation.
-3. **Handling Slang**: Replaced informal terms (e.g., "lol" → "laughing out loud").
-4. **Sentiment Scoring**: Used **VADER** to categorize content as positive, negative, or neutral.
-5. **Topic Modeling**: Applied **LDA** to identify themes.
-6. **Cosine Similarity**: Measured alignment between summaries and documents.
+### Preprocessing Pipeline
+1. **Text Cleaning**: Removed noise (e.g., URLs, HTML tags, usernames).
+2. **Normalization**: Converted text to lowercase while retaining punctuation.
+3. **Slang Handling**: Replaced informal terms (e.g., "u" → "you", "lol" → "laughing out loud").
+4. **Sentiment Analysis**: Used **VADER** to classify content as positive, negative, or neutral.
+5. **Topic Modeling**: Applied **LDA** to identify recurring themes.
+6. **Cosine Similarity**: Measured semantic alignment between summaries and original content.
 
 ---
 
 ## 🛠️ Model System
 ### Why BART?
-**BART (Bidirectional and Auto-Regressive Transformer)** was chosen for its dual capabilities:
-- **Contextual Understanding**: Excels in abstractive summarization by processing both left and right contexts.
-- **Fine-tuning Flexibility**: Easily adaptable for domain-specific tasks.
+**BART (Bidirectional and Auto-Regressive Transformer)** was selected for its exceptional performance in abstractive summarization tasks. Its dual architecture—combining a bidirectional encoder and an autoregressive decoder—makes it highly effective for handling lengthy, unstructured Reddit threads.
 
 ### Enhancements
-- **LDA Integration**: Augments input with topic-specific keywords to improve summarization quality.
-- **RAKE Integration**: Extracts critical keywords to refine model focus.
+- **RAKE Integration**: Extracts critical keywords from threads to improve summarization focus.
+- **LDA Augmentation**: Enriches input documents with topic-specific keywords to enhance contextual understanding.
 
-### Fine-Tuning Process
-1. Experimented with freezing encoder/decoder layers to optimize learning.
-2. Tested various learning rates to balance speed and accuracy.
-3. Adjusted summary length to reduce neutral tones and improve relevance.
+### Fine-Tuning Configurations
+To maximize performance, multiple configurations of BART were tested by freezing encoder and decoder layers:
+1. **5 Encoders, 5 Decoders (5E-5D)**:
+   - Best **ROUGE-L** scores but limited precision (**BLEU**).
+2. **6 Encoders, 6 Decoders (6E-6D)**:
+   - Improved generalization with stable validation loss.
+3. **11 Encoders, 11 Decoders (11E-11D)**:
+   - **Final Configuration**: Achieved the best balance of fluency, precision, and computational efficiency.
+   - **Performance Highlights**:
+     - Training loss: 0.9384
+     - Validation loss: 0.9853
+     - Superior **ROUGE**, **BLEU**, and **BERT F1** metrics.
+
+The **11E-11D configuration** was finalized for its ability to deliver context-rich summaries while maintaining computational efficiency.
 
 ---
 
 ## 📈 Evaluation Metrics
-The performance of the summarization model was assessed using:
-- **ROUGE-1, ROUGE-2, ROUGE-L**: Measures overlap between generated summaries and references.
-- **BLEU**: Evaluates the fluency of summaries.
-- **BERT F1**: Analyzes semantic similarity to assess relevance.
+The model's performance was evaluated using industry-standard metrics:
+- **ROUGE-1, ROUGE-2, ROUGE-L**: Measure overlap with reference summaries.
+- **BLEU**: Evaluates fluency and precision in text generation.
+- **BERT F1**: Assesses semantic similarity and relevance.
 
 ### Results:
 | Metric        | Score   |
@@ -82,31 +89,25 @@ The performance of the summarization model was assessed using:
 ---
 
 ## 📊 Visual Insights
-1. **Sentiment Analysis**: Visualized tonal shifts introduced by summarization.
-2. **Cosine Similarity**: Demonstrated semantic alignment of summaries with original content.
-3. **Semantic Distance**: Highlighted variability in prediction quality.
-4. **Jaccard Similarity**: Compared word overlap across texts.
+The following visualizations were developed to analyze the model’s output:
+1. **Sentiment Analysis**: Highlights tonal shifts in summaries versus original documents.
+2. **Cosine Similarity**: Demonstrates alignment of generated summaries with source content.
+3. **Semantic Distance**: Evaluates divergence in meaning between documents and summaries.
+4. **Jaccard Similarity**: Measures word overlap between text pairs.
 
 ---
 
 ## 🌟 Features
 ### Core Functionality:
-- **Summarization**: Generates concise, context-aware summaries.
-- **Topic Modeling**: Identifies and integrates key discussion themes.
-- **Sentiment Analysis**: Evaluates the emotional tone of threads.
-- **Hashtag Generation**: Extracts relevant entities and keywords.
+- **Text Summarization**: Generates concise summaries preserving contextual relevance.
+- **Topic Modeling**: Integrates LDA to highlight recurring themes.
+- **Sentiment Analysis**: Evaluates and visualizes emotional tone.
+- **Hashtag Generation**: Extracts relevant keywords and entities.
 
 ### User Interface:
-- Intuitive input for pasting Reddit threads or providing URLs.
-- Outputs concise summaries, hashtags, and sentiment analysis results.
-- Sharing option for direct content posting on Twitter.
+- Paste Reddit threads or URLs to generate summaries and hashtags.
+- Share summaries directly on social platforms like Twitter.
 
 ---
 
-## 🧩 Architecture
-1. **Input Processing**: Text cleaning, slang normalization, and topic enrichment.
-2. **Summarization**: BART model fine-tuned with LDA topics for context-rich summaries.
-3. **Output**: Visualizations, hashtags, and summary export.
-
----
 
